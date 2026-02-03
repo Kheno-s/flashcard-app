@@ -8,7 +8,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "typecheck": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+    "typecheck": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "build:web": "CI=1 expo export --platform web --non-interactive",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -34,7 +36,10 @@
     "typescript": "~5.9.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.1",
     "@types/react": "~19.1.0",
+    "http-server": "^14.1.1",
+    "playwright": "^1.58.1",
     "react-test-renderer": "19.1.0"
   }
 }
