@@ -2,19 +2,21 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, ScrollView, Platform } from 'react-native';
 
 import { useRepo } from '@/src/storage/useRepo';
-import { parseTsvToDeck } from '@/src/services/importTsv';
+import { parseDelimitedToDeck } from '@/src/services/importDelimited';
 
 export default function ImportScreen() {
   const { repo, error } = useRepo();
 
   const [deckName, setDeckName] = useState('BGB');
-  const [tsv, setTsv] = useState('');
+  const [text, setText] = useState('');
   const [status, setStatus] = useState<string>('');
 
   const placeholder = useMemo(
     () =>
-      'Front\tBack\tTags\n' +
-      'Was ist ein Anspruch? (§ 194 I BGB)\tDas Recht, von einem anderen ein Tun, Dulden oder Unterlassen zu verlangen.\tbgb grundbegriffe\n',
+      'TSV: Front\tBack\tTags\n' +
+      'Was ist ein Anspruch? (§ 194 I BGB)\tDas Recht, von einem anderen ein Tun, Dulden oder Unterlassen zu verlangen.\tbgb grundbegriffe\n\n' +
+      'CSV: Front,Back,Tags\n' +
+      'Werkvertrag (§ 631 BGB),Erfolg geschuldet; Unternehmer stellt Werk her, Besteller zahlt Vergütung.,werkvertrag\n',
     []
   );
 
@@ -22,9 +24,9 @@ export default function ImportScreen() {
     setStatus('');
     if (!repo) return;
 
-    const res = parseTsvToDeck(tsv, deckName);
+    const res = parseDelimitedToDeck(text, deckName);
     if (res.cards.length === 0) {
-      setStatus('Keine gültigen Karten gefunden. Prüfe das TSV-Format.');
+      setStatus('Keine gültigen Karten gefunden. Prüfe TSV/CSV-Format.');
       return;
     }
 
@@ -32,8 +34,9 @@ export default function ImportScreen() {
     await repo.addCards(res.cards, res.reviewStates);
 
     const warn = res.warnings.length ? `\nWarnungen: ${res.warnings.length}` : '';
-    setStatus(`Importiert: ${res.cards.length} Karten in Deck "${res.deck.name}".${warn}`);
-    setTsv('');
+    const fmt = `${res.format.toUpperCase()} (${res.delimiter === '\t' ? 'TAB' : res.delimiter})`;
+    setStatus(`Importiert: ${res.cards.length} Karten in Deck "${res.deck.name}". Format: ${fmt}.${warn}`);
+    setText('');
   }
 
   return (
@@ -51,14 +54,14 @@ export default function ImportScreen() {
         <Text style={styles.label}>Deck Name</Text>
         <TextInput value={deckName} onChangeText={setDeckName} style={styles.input} placeholder="z.B. BGB" />
 
-        <Text style={styles.label}>TSV</Text>
+        <Text style={styles.label}>TSV / CSV</Text>
         <Text style={styles.muted}>
-          Format: Front\tBack\tTags(optional)
+          TSV: Front\tBack\tTags(optional) — CSV: Front,Back,Tags(optional) (Komma oder Semikolon)
         </Text>
 
         <TextInput
-          value={tsv}
-          onChangeText={setTsv}
+          value={text}
+          onChangeText={setText}
           style={[styles.input, styles.textarea]}
           placeholder={placeholder}
           multiline
