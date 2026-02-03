@@ -1,0 +1,18 @@
+services:
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.58.1-jammy
+    working_dir: /work
+    volumes:
+      - ./:/work
+    environment:
+      - CI=1
+      - EXPO_NO_TELEMETRY=1
+    command: >
+      bash -lc "
+        npm ci --include=dev &&
+        npm run typecheck &&
+        npm run build:web &&
+        npx http-server dist -p 4173 >/tmp/http.log 2>&1 &
+        npx wait-on http://127.0.0.1:4173 &&
+        npm run test:e2e
+      "
