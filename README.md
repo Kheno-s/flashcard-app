@@ -64,7 +64,8 @@ Prinzip:
 
 ### Schritt 1 – Grundgerüst (jetzt)
 - [x] Expo Projekt initialisiert (tabs template)
-- [ ] Strukturordner `src/` anlegen (domain/services/storage/ui)
+- [x] Strukturordner `src/` angelegt (domain/services/storage/ui)
+- [x] Docs angelegt (`docs/ARCHITECTURE.md`, `docs/IMPORT_FORMAT.md`)
 - [ ] Basis-Navigation: Home / Decks / Review / Import
 
 ### Schritt 2 – Datenmodell
