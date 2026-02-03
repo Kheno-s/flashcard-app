@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, Pressable, StyleSheet, View as RNView } from 'react-native';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 
 import { Text, View } from '@/components/Themed';
 import { useAppTheme } from '@/src/theme/ThemeProvider';
@@ -14,11 +14,11 @@ export default function ModalScreen() {
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
       <Text style={styles.label}>Theme</Text>
-      <RNView style={styles.row}>
+      <View style={styles.row}>
         <Chip title="System" active={mode === 'system'} onPress={() => setMode('system')} />
         <Chip title="Light" active={mode === 'light'} onPress={() => setMode('light')} />
         <Chip title="Dark" active={mode === 'dark'} onPress={() => setMode('dark')} />
-      </RNView>
+      </View>
 
       <Text style={styles.muted}>Diese Einstellung wird lokal gespeichert.</Text>
 
