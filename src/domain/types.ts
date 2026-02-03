@@ -24,6 +24,7 @@ export type Deck = {
   id: DeckId;
   name: string;
   createdAt: number;
+  parentDeckId?: DeckId;
 };
 
 export type Rating = "again" | "hard" | "good" | "easy";
